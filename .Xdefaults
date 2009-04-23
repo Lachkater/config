@@ -1,0 +1,140 @@
+
+Xft.antialias:          true
+Xft.hinting:            true
+Xft.dpi:                96
+Xft.rgba:               rgba
+Xft.hintstyle:          hintfull
+
+Xcursor.theme:	        Vanilla-DMZ
+Xcursor.size:           21
+
+
+! Urxvt Settings
+
+urxvt.fading:           20%
+urxvt.cursorBlink:      false
+urxvt.cursorColor:      #00ff00
+urxvt.cursorColor2:     #ff0000
+
+urxvt.font:             xft:DejaVu Sans Mono:pixelsize=13
+urxvt.boldFont:         xft:DejaVu Sans Mono:bold:pixelsize=13
+! urxvt.font:             xft:Terminus:pixelsize=18
+! urxvt.boldFont:         xft:DejaVu Sans Mono:bold:pixelsize=13
+!urxvt.backround:        black
+!urxvt.foreground:       green
+
+urxvt.geometry:         80x24+0+14
+urxvt.shading:          30
+urxvt.depth:            24
+urxvt.borderLess:	    false
+urxvt.internalBorder:	2
+urxvt.inheritPixmap:    true
+urxvt.saveLines:        5000
+urxvt.scrollBar:        false
+urxvt.termName:         rxvt
+urxvt.underlineColor:   #86a2be
+
+urxvt.perl-lib::            /usr/lib/urxvt/perl/
+urxvt.perl-ext-common:      matcher,searchable-scrollback
+urxvt.matcher.button:       1
+urxvt.matcher.pattern.1:    \bwww\.[\w-]\.[\w./?&@#-].[\w/-]
+urxvt.urlLauncher:          rxvtOpera
+
+urxvt.foreground:     rgb:ee/ee/ee
+urxvt.background:     rgb:10/10/10
+
+!Theme One
+!!urxvt.background: rgb:00/00/00
+!urxvt.foreground: rgb:b8/b8/b8
+*color0:     rgb:00/00/00
+*color1:     rgb:c8/00/00
+*color2:     rgb:00/b8/00
+*color3:     rgb:b8/54/00
+*color4:     rgb:00/00/b8
+*color5:     rgb:b8/00/b8
+*color6:     rgb:00/b8/b8
+*color7:     rgb:b8/b8/b8
+*color8:     rgb:54/50/54
+*color9:     rgb:f8/54/50
+*color10:    rgb:50/fc/50
+*color11:    rgb:f8/fc/50
+*color12:    rgb:50/54/f8
+*color13:    rgb:f8/54/f8
+*color14:    rgb:50/fc/f8
+*color15:    rgb:f8/fc/f8
+
+! ---| Tango |--- {{{
+ 
+! Black
+*color0:  #1e1e1e
+*color8:  #555753
+! Red
+*color1:  #CC0000
+*color9:  #EF2929
+! Green
+*color2:  #4E9A06
+*color10: #8AE234
+! Yellow
+*color3:  #C4A000
+*color11: #FCE94F
+! Blue
+*color4:  #3465A4
+*color12: #729FCF
+! Purple
+*color5:  #75507B
+*color13: #AD7FA8
+! Cyan
+*color6:  rgb:06/98/9A
+*color14: #34E2E2
+! White
+*color7:  #9f9f9f
+*color15: #e0e0e0
+ 
+!-------------------------------------------------------------------------------
+!
+!    X C A L C - Setting
+!
+!
+xcalc.geometry: 200x275
+xcalc.ti.bevel.background: #111111
+xcalc.ti.bevel.screen.background: #000000
+xcalc.ti.bevel.screen.DEG.background: #000000
+xcalc.ti.bevel.screen.DEG.foreground: LightSeaGreen
+xcalc.ti.bevel.screen.GRAD.background: #000000
+xcalc.ti.bevel.screen.GRAD.foreground: LightSeaGreen
+xcalc.ti.bevel.screen.RAD.background: #000000
+xcalc.ti.bevel.screen.RAD.foreground: LightSeaGreen
+xcalc.ti.bevel.screen.INV.background: #000000
+xcalc.ti.bevel.screen.INV.foreground: Red
+xcalc.ti.bevel.screen.LCD.background: #000000
+xcalc.ti.bevel.screen.LCD.foreground: LightSeaGreen
+xcalc.ti.bevel.screen.LCD.shadowWidth: 0
+xcalc.ti.bevel.screen.M.background: #000000
+xcalc.ti.bevel.screen.M.foreground: LightSeaGreen
+xcalc.ti.bevel.screen.P.background: #000000
+xcalc.ti.bevel.screen.P.foreground: Yellow
+xcalc.ti.Command.foreground: White
+xcalc.ti.Command.background: #777777
+xcalc.ti.button5.background: Orange3
+xcalc.ti.button19.background: #611161
+xcalc.ti.button18.background: #611161
+xcalc.ti.button20.background: #611111
+xcalc.ti.button25.background: #722222
+xcalc.ti.button30.background: #833333
+xcalc.ti.button35.background: #944444
+xcalc.ti.button40.background: #a55555
+xcalc.ti.button22.background: #222262
+xcalc.ti.button23.background: #222262
+xcalc.ti.button24.background: #222272
+xcalc.ti.button27.background: #333373
+xcalc.ti.button28.background: #333373
+xcalc.ti.button29.background: #333373
+xcalc.ti.button32.background: #444484
+xcalc.ti.button33.background: #444484
+xcalc.ti.button34.background: #444484
+xcalc.ti.button37.background: #555595
+xcalc.ti.button38.background: #555595
+xcalc.ti.button39.background: #555595
+XCalc.Cursor:                 hand2
+XCalc.ShapeStyle:             rectangle
+
