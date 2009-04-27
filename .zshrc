@@ -5,8 +5,6 @@ zmodload  zsh/termcap zsh/complist zsh/computil
 autoload -Uz compinit colors history-search-end url-quote-magic
 compinit
 colors
-#zmodload -i zsh/complist
-#zmodload zsh/computil
 
 HISTFILE=~/.zshhist
 HISTSIZE=8000
@@ -25,17 +23,17 @@ setopt hist_reduce_blanks   # reduce whitespace in history
 setopt correct
 #setopt glob_complete
 setopt extended_glob
-setopt autopushd          # automatically append dirs to the push/pop list
-setopt pushdignoredups    # and don't duplicate them
+setopt autopushd            # automatically append dirs to the push/pop list
+setopt pushdignoredups      # and don't duplicate them
 setopt prompt_subst
-setopt auto_cd            # automatically cd to paths
+setopt auto_cd              # automatically cd to paths
 
 
 ## Prompt
 ##############
 
 PROMPT="%B%n[%24<*<%~]%#%b "
-#RPROMPT="%~ (%*)" #zeige datum am rechten rand
+#RPROMPT="%~ (%*)" #show date on right prompt
 
 
 ## Keys
@@ -58,7 +56,7 @@ bindkey '^[[6~' history-search-forward
 bindkey '\E[H' beginning-of-line
 bindkey '\E[F' end-of-line
 
-#urxvt
+# rxvt
 bindkey '\e[8~' end-of-line
 bindkey '\e[7~' beginning-of-line
 bindkey '^[Oc' forward-word 
@@ -95,14 +93,17 @@ zstyle ':completion:*history*' remove-all-dups yes
 zstyle ':completion:*:(cd|mv|cp):*' ignore-parents parent pwd
 typeset -xUT LS_COLORS ls_colors
 
+# more ls colors
 ls_colors=(
     #1 = red 2=green 3=yellow 4=blue 5=pink 6=cyan 7=white 8=black
     "no=00"
     "fi=00"
     "di=01;38"
     "ln=01;35"
-	
-	"*.run=01;32"
+    "*#=4"
+    "*%=4"
+    "*~=4"
+
     "*.cmd=01;32"
     "*.exe=01;32"
     "*.sh=01;32" 
@@ -116,12 +117,9 @@ ls_colors=(
     "*.zip=00;31"
     "*.gz=00;31"
     "*.bz2=00;31"
-    "*.bz=00;31"
-    "*.tz=00;31"
-
+    "*.cpio=00;31"
     "*.rpm=01;31"
     "*.deb=01;31"
-    "*.cpio=01;31"
 
     "*.jpg=00;34"
     "*.gif=00;34"
@@ -130,10 +128,6 @@ ls_colors=(
     "*.xpm=00;34"
     "*.png=00;34"
     "*.tif=00;34"
-
-    "*#=4"
-    "*%=4"
-    "*~=4"
 
     "*.c=31"
     "*.cc=31"
@@ -144,13 +138,6 @@ ls_colors=(
     "*.h=33"
     "*.java=31"
     "*.class=35"
-
-    "*akefile=31;43"
-    "*akefile.linux=31;43"
-    "*akefile.in=31;43"
-    "*akefile.am=31;43"
-    "*onfigure.in=31;43"
-
     "*.html=31"
     "*.htm=31"
     "*.shtml=31"
@@ -158,6 +145,13 @@ ls_colors=(
     "*.lyx=31"
     "*.mgp=31"
     "*.pl=31"
+    "*.py=31"
+
+    "*akefile=31;43"
+    "*akefile.linux=31;43"
+    "*akefile.in=31;43"
+    "*akefile.am=31;43"
+    "*onfigure.in=31;43"
 
     "*.ogg=33;4"
     "*.flac=33;4"
@@ -166,11 +160,20 @@ ls_colors=(
     "*.mpg=35;4"
     "*.mpeg=35;4"
     "*.avi=35;4"
-    "*.rm=35;4"
     "*.ram=35;4"
     "*.wmv=35;4"
-#    ${ls_colors}
+    "*.vob=35;4"
+    "*.mkv=35;4"
 )
+
+# Colored less
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
 
 
 ## Alias
@@ -205,6 +208,7 @@ alias -s {mpg,mpeg,avi,ogm,wmv,m4v,mp4,mov,mkv,vob}="mplayer -idx"
 # auto open audio
 alias -s {mp3,ogg,wav,flac}="cplay"
 
+
 ## Functions
 ##############
 
@@ -223,7 +227,7 @@ function cleanthumbnails()
 function readdisk()
 {
 	if [ "$1" = "" ] ; then		
-		echo "usage: readdisk [sd/hd?]"	
+		echo "usage: readdisk [sd?/hd?]"	
 	else
 		echo "$1"
 		sudo hexdump -C /dev/"$1" | less
@@ -235,10 +239,10 @@ function showtopcmds()
     if [ "$1" = "" ] ; then
 		1="10"
     fi
-    print -l — ${(o)history%% *} | uniq -c | sort -nr | head -n "$1"
-    echo "* Roots Top Cmds:" 
-	grep -i "sudo" ~/.zshhist | awk '{print $2}'|awk 'BEGIN {FS="|"} {print $1}'| sort | uniq -c | sort -nr | head -n "$1"
-    echo "* Total Cmds: `wc -l ~/.zshhist`"
+    print -l — ${(o)history%% *} | uniq -c | sort -nr | head -n '$1'
+    echo '* Roots Top Cmds:'
+	grep -i 'sudo' $HISTFILE | awk '{print $2}'|awk 'BEGIN {FS="|"} {print $1}'| sort | uniq -c | sort -nr | head -n "$1"
+    echo '* Total Cmds: `wc -l $HISTFILE`'
 }
 
 function llocate()
@@ -248,7 +252,7 @@ function llocate()
 
 function bcalc() {
     if [[ ! -f /usr/bin/bc ]] ; then
-        echo "Please install bc before trying to use it!"
+        echo 'Please install bc before trying to use it!'
         return
     fi
     
@@ -294,15 +298,5 @@ case $TERM in
      ;;
 esac
 
-## Colored less
-###############
-
-export LESS_TERMCAP_mb=$'\E[01;31m'
-export LESS_TERMCAP_md=$'\E[01;31m'
-export LESS_TERMCAP_me=$'\E[0m'
-export LESS_TERMCAP_se=$'\E[0m'
-export LESS_TERMCAP_so=$'\E[01;44;33m'
-export LESS_TERMCAP_ue=$'\E[0m'
-export LESS_TERMCAP_us=$'\E[01;32m'
 
 #[ -f .todo ] && cat .todo
