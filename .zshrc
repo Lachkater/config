@@ -17,7 +17,7 @@ setopt brace_ccl
 setopt complete_aliases
 setopt complete_in_word     # ~/Dev/pro -> <Tab> -> ~/Development/project
 setopt numeric_glob_sort    # when globbing numbered files, use real counting
-setopt HIST_IGNORE_ALL_DUPS # when I run a command several times, only store one
+setopt hist_ignore_all_dups # when I run a command several times, only store one
 setopt hist_no_functions    # don't show function definitions in history
 setopt hist_reduce_blanks   # reduce whitespace in history
 setopt correct
@@ -39,12 +39,12 @@ PROMPT="%B%n[%24<*<%~]%#%b "
 ## Keys
 ##############
 
-bindkey '^y' kill-region
-bindkey ';5C' forward-word
-bindkey ';5D' backward-word
-bindkey '^O' vi-open-line-below
-bindkey '^w' backward-delete-word
-bindkey '^k' forward-delete-word
+bindkey '^y'	kill-region
+bindkey ';5C'	forward-word
+bindkey ';5D'	backward-word
+bindkey '^O'	vi-open-line-below
+bindkey '^w'	backward-delete-word
+bindkey '^k'	forward-delete-word
 bindkey '^i'    expand-or-complete-prefix
 bindkey '^[OH'  beginning-of-line
 bindkey '^[OF'  end-of-line
@@ -53,14 +53,12 @@ bindkey '^[[5~' history-search-backward
 bindkey '^[[6~' history-search-forward
 
 # konsole or xterm
-bindkey '\E[H' beginning-of-line
-bindkey '\E[F' end-of-line
+bindkey '\E[H'	beginning-of-line
+bindkey '\E[F'	end-of-line
 
 # rxvt
 bindkey '\e[8~' end-of-line
 bindkey '\e[7~' beginning-of-line
-bindkey '^[Oc' forward-word 
-bindkey '^[Od' backward-word
 
 
 ## Style
@@ -192,6 +190,7 @@ alias -g ND='$(ls --color=none -d *(/om[1]))' # newest directory
 alias -g NF='$(ls --color=none *(.om[1]))' #newest file
 alias own="sudo chown `whoami`:users"
 alias podracer="cd /mnt/sda5/PodRacer; WINEDEBUG=-all wine podracer_*.exe; cd -"
+alias pwd=/bin/pwd	# inbuild pwd does not show realpath (symlink problem)
 alias readbios="sudo dd if=/dev/mem bs=1k skip=768 count=512 2>/dev/null | strings -n 8"
 alias search="find | grep"
 alias showip="wget -q -O - www.joerky.de/dyn/ip.php | cat"
@@ -239,10 +238,10 @@ function showtopcmds()
     if [ "$1" = "" ] ; then
 		1="10"
     fi
-    print -l — ${(o)history%% *} | uniq -c | sort -nr | head -n '$1'
-    echo '* Roots Top Cmds:'
-	grep -i 'sudo' $HISTFILE | awk '{print $2}'|awk 'BEGIN {FS="|"} {print $1}'| sort | uniq -c | sort -nr | head -n "$1"
-    echo '* Total Cmds: `wc -l $HISTFILE`'
+    print -l ${(o)history%% *} | uniq -c | sort -nr | head -n "$1"
+    echo "* Roots Top Cmds:"
+	grep sudo $HISTFILE | awk '{print $2}'| sort | uniq -c | sort -nr | head -n "$1"
+    echo "* Total Cmds: `wc -l $HISTFILE`"
 }
 
 function llocate()
@@ -290,13 +289,6 @@ function lli()
 {
     ls -l --color=auto | grep -i ${1:-""} 
 }
-
-# set terminal title
-case $TERM in
-     xterm*|rxvt*|screen)
-          precmd () {print -Pn "\e]0;%n@%m: %~\a"}
-     ;;
-esac
 
 
 #[ -f .todo ] && cat .todo

@@ -10,7 +10,7 @@ Xcursor.theme:	        Vanilla-DMZ
 Xcursor.size:           21
 
 
-! Urxvt Settings
+! Urxvt Settings {{{
 urxvt.fading:           20%
 urxvt.cursorBlink:      false
 urxvt.cursorColor:      #00ff00
@@ -41,6 +41,14 @@ urxvt.urlLauncher:          rxvtOpera
 
 urxvt.foreground:     rgb:ee/ee/ee
 urxvt.background:     rgb:10/10/10
+
+
+urxvt.keysym.Control-Up:   \033[1;5A
+urxvt.keysym.Control-Down:    \033[1;5B
+urxvt.keysym.Control-Left:    \033[1;5D
+urxvt.keysym.Control-Right:    \033[1;5C
+
+! }}}
 
 ! Colors {{{
 
@@ -93,7 +101,7 @@ urxvt.background:     rgb:10/10/10
  
 ! }}}
 
-! Xcalc settings
+! Xcalc settings {{{
 
 xcalc.geometry: 200x275
 xcalc.ti.bevel.background: #111111
@@ -137,4 +145,6 @@ xcalc.ti.button38.background: #555595
 xcalc.ti.button39.background: #555595
 XCalc.Cursor:                 hand2
 XCalc.ShapeStyle:             rectangle
+
+! }}}
 

@@ -58,4 +58,4 @@ inoremap <C-v> <esc>p i
 map + :next<CR>
 map - :prev<CR>
 map # :w<CR>:next<CR>
-
+nmap S :w !sudo tee %<CR>
