@@ -13,21 +13,21 @@ SAVEHIST=8000
 #bindkey -e
 export EDITOR=vim
 
-setopt brace_ccl
+setopt brace_ccl			# expand alphabetic brace exrpressions
 setopt complete_aliases
 setopt complete_in_word     # ~/Dev/pro -> <Tab> -> ~/Development/project
 setopt numeric_glob_sort    # when globbing numbered files, use real counting
 setopt hist_ignore_all_dups # when I run a command several times, only store one
 setopt hist_no_functions    # don't show function definitions in history
 setopt hist_reduce_blanks   # reduce whitespace in history
-setopt correct
+setopt correct				# spell check for commands only
 #setopt glob_complete
 setopt extended_glob
 setopt autopushd            # automatically append dirs to the push/pop list
 setopt pushdignoredups      # and don't duplicate them
 setopt prompt_subst
 setopt auto_cd              # automatically cd to paths
-
+setopt numeric_glob_sort	# when globbing numbered files, use real counting
 
 ## Prompt
 ##############
@@ -40,26 +40,29 @@ PROMPT="%B%n[%24<*<%~]%#%b "
 ##############
 
 bindkey '^y'	kill-region
-bindkey ';5C'	forward-word
-bindkey ';5D'	backward-word
 bindkey '^O'	vi-open-line-below
 bindkey '^w'	backward-delete-word
-bindkey '^k'	forward-delete-word
 bindkey '^i'    expand-or-complete-prefix
-bindkey '^[OH'  beginning-of-line
-bindkey '^[OF'  end-of-line
-bindkey '^[[3~' delete-char
-bindkey '^[[5~' history-search-backward
-bindkey '^[[6~' history-search-forward
+bindkey '\EOH'  beginning-of-line
+bindkey '\EOF'  end-of-line
+bindkey '\E[3~' delete-char
+bindkey '\E[5~' history-search-backward
+bindkey '\E[6~' history-search-forward
 
 # konsole or xterm
 bindkey '\E[H'	beginning-of-line
 bindkey '\E[F'	end-of-line
 
-# rxvt
-bindkey '\e[8~' end-of-line
-bindkey '\e[7~' beginning-of-line
-
+# (u)rxvt
+bindkey '\E[8~' end-of-line
+bindkey '\E[7~' beginning-of-line
+bindkey '5C'	forward-word
+bindkey '5D'	backward-word
+# screen/tmux
+bindkey '\E[1~' beginning-of-line
+bindkey '\E[4~' end-of-line
+bindkey '\EOD'	backward-word
+bindkey '\EOC'	forward-word
 
 ## Style
 ##############
@@ -179,21 +182,23 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 
 alias -g ...="../.."
 alias -g ....="../../.."
+#alias alert="notify-send -i $(history|tail -n1)"
 alias DIE="sudo shutdown -hP now 'Ich Will Leben!'"
-alias grublist="sudo vim /boot/grub/menu.lst"
 alias la="ls -ACF"
 alias ll="ls -l -h --color=auto -F"
 alias ls="ls --color=auto -F"
 alias grep="grep --color=auto"
-alias cgrep="grep --color=auto"
 alias -g ND='$(ls --color=none -d *(/om[1]))' # newest directory
 alias -g NF='$(ls --color=none *(.om[1]))' #newest file
 alias own="sudo chown `whoami`:users"
 alias podracer="cd /mnt/sda5/PodRacer; WINEDEBUG=-all wine podracer_*.exe; cd -"
 alias pwd=/bin/pwd	# inbuild pwd does not show realpath (symlink problem)
+alias pud='pwd | xsel -s'
+alias pod='cd "$( xsel -so )"'
 alias readbios="sudo dd if=/dev/mem bs=1k skip=768 count=512 2>/dev/null | strings -n 8"
 alias search="find | grep"
-alias showip="wget -q -O - www.joerky.de/dyn/ip.php | cat"
+#alias showip="wget -q -O - www.joerky.de/dyn/ip.php | cat"
+alias showip="curl icanhazip.com"
 alias ut99="cd /mnt/sda5/Unr*/Sy*; WINEDEBUG=-all wine UnrealT*.exe; cd -"
 alias xorg="sudo vim /etc/X11/xorg.conf"
 
@@ -202,7 +207,7 @@ compctl -/ -g '*.(ogg|ogv|avi|mpg|mpeg|wmv|mp4|mov|flv|divx|mkv|vob)' smplayer
 compctl -/ -g '*.(png|jpg|gif|bmp|tiff|jpeg|tga|JPG)' feh
 
 # auto open movies
-alias -s {mpg,mpeg,avi,ogm,wmv,m4v,mp4,mov,mkv,vob}="mplayer -idx"
+alias -s {mpg,mpeg,avi,ogm,wmv,m4v,mp4,mov,mkv,vob,ogv,ogg}="mplayer -idx"
 
 # auto open audio
 alias -s {mp3,ogg,wav,flac}="cplay"
@@ -213,13 +218,14 @@ alias -s {mp3,ogg,wav,flac}="cplay"
 
 function update()
 {
-    yaourt --noconfirm -Syu --aur
+#    packer --noconfirm -Syu
+	sudo clyde -Syu --aur --noconfirm
 }
 
 function cleanthumbnails()
 {
 	du -sh ~/.thumbnails
-	find ~/.thumbnails -type f -atime +14 -exec rm '{}' \;
+	find ~/.thumbnails -type f -atime +28 -exec rm '{}' \;
 	du -sh ~/.thumbnails
 }
 
@@ -249,6 +255,12 @@ function llocate()
     locate $@ | grep -v /mnt/
 }
 
+function lowercase-extensions()
+{
+	autoload zmv
+	zmv '(**/)(*).(*)' '$1$2.${(L)3}'
+}
+
 function bcalc() {
     if [[ ! -f /usr/bin/bc ]] ; then
         echo 'Please install bc before trying to use it!'
@@ -264,14 +276,7 @@ function bcalc() {
 
 function title()
 {
-	if [[ $TERM == "screen" ]]; then
-	# Use these two for GNU Screen:
-		print -nR $'\033k'$1$'\033'\\\
-		print -nR $'\033]0;'$2$'\a'
-	elif [[ $TERM == "xterm" || $TERM == "urxvt" ]]; then
-		# Use this one instead for XTerms:
-		print -nR $'\033]0;'$*$'\a'
-	fi
+	print -nR $'\033]0;'$*$'\a'
 }
 
 function locategrep 
@@ -290,5 +295,17 @@ function lli()
     ls -l --color=auto | grep -i ${1:-""} 
 }
 
+function c() {
+    case $1 in
+        (-Ss | -Si | -Q* | -T | -G | *)
+            /usr/bin/clyde "$@" ;;
+        (-S* | -R* | -U )
+            /usr/bin/sudo /usr/bin/clyde "$@" || /bin/su -c /usr/bin/clyde "$@" || return $? ;;
+    esac
+}
+
+
+#compdef _pacman clyde=pacman
 
 #[ -f .todo ] && cat .todo
+
