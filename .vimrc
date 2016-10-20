@@ -23,6 +23,7 @@ set gdefault		" automatically searh globally
 set incsearch		" increment search
 set hlsearch		" highlight searched words
 set paste			" put vim in paste mode (middle mouse click usw)
+set ruler			" display line numbers
 set shiftwidth=4	" allows the use of < and > for VISUAL indenting
 set softtabstop=4   " counts n spaces when DELETE or BCKSPCE is used
 set smarttab
@@ -64,3 +65,4 @@ nmap S :w !sudo tee %<CR>
 
 map <C-t>     :tabnew<CR>
 map <C-w>     :tabclose<CR>
+map <C-v>	  !!xsel<CR>

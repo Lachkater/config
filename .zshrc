@@ -1,25 +1,32 @@
-## lachkaters .zshrc 04.09
+## lachkaters .zshrc 01.14
 ##########################
+
+# {{{1 Options
 
 zmodload  zsh/termcap zsh/complist zsh/computil
 autoload -Uz compinit colors history-search-end url-quote-magic
 compinit
 colors
 
-HISTFILE=~/.zshhist
-HISTSIZE=8000
-SAVEHIST=8000
+export XCOMPOSE=~/.Xcompose
 
-#bindkey -e
+export HISTFILE=~/.zshhist
+export HISTSIZE=6096
+export SAVEHIST=6096
 export EDITOR=vim
 
 setopt brace_ccl			# expand alphabetic brace exrpressions
 setopt complete_aliases
 setopt complete_in_word     # ~/Dev/pro -> <Tab> -> ~/Development/project
 setopt numeric_glob_sort    # when globbing numbered files, use real counting
-setopt hist_ignore_all_dups # when I run a command several times, only store one
+#setopt hist_ignore_all_dups # when I run a command several times, only store one
+setopt hist_ignore_dups		# when I run a command several times, only store one
 setopt hist_no_functions    # don't show function definitions in history
 setopt hist_reduce_blanks   # reduce whitespace in history
+setopt append_history
+setopt inc_append_history
+setopt HIST_FIND_NO_DUPS
+setopt INTERACTIVE_COMMENTS # Allow comments even in interactive shells
 setopt correct				# spell check for commands only
 #setopt glob_complete
 setopt extended_glob
@@ -27,45 +34,52 @@ setopt autopushd            # automatically append dirs to the push/pop list
 setopt pushdignoredups      # and don't duplicate them
 setopt prompt_subst
 setopt auto_cd              # automatically cd to paths
-setopt numeric_glob_sort	# when globbing numbered files, use real counting
 
-## Prompt
-##############
+## {{{1 Prompt
 
-PROMPT="%B%n[%24<*<%~]%#%b "
+#PROMPT="%B%n[%24<*<%~]%#%b "
+PROMPT="
+%B%n %bon%B %m %bis%B %(?.%F{green}:)%f.%F{red}:(%f) %bwhile being at%B %32<*<%~
+%#%b "
+
+PROMPT="
+%B%n %bon%B %m %bis%B %(?.%F{green}:)%f.%F{red}:(%f) %bat%B %32<*<%~
+%#%b "
 #RPROMPT="%~ (%*)" #show date on right prompt
 
 
-## Keys
-##############
+## {{{1 Keys
 
-bindkey '^y'	kill-region
-bindkey '^O'	vi-open-line-below
-bindkey '^w'	backward-delete-word
-bindkey '^i'    expand-or-complete-prefix
-bindkey '\EOH'  beginning-of-line
-bindkey '\EOF'  end-of-line
-bindkey '\E[3~' delete-char
-bindkey '\E[5~' history-search-backward
-bindkey '\E[6~' history-search-forward
+# mappings for Ctrl-left-arrow and Ctrl-right-arrow for word moving 
+bindkey -M emacs '^[[1;5C' forward-word 
+bindkey -M emacs '^[[1;5D' backward-word 
+bindkey '^R'  history-incremental-search-backward
+bindkey '^[[5~' history-search-backward		#PgUp
+bindkey '^[[6~' history-search-forward		#PgDwn
 
-# konsole or xterm
-bindkey '\E[H'	beginning-of-line
-bindkey '\E[F'	end-of-line
+typeset -A key
 
-# (u)rxvt
-bindkey '\E[8~' end-of-line
-bindkey '\E[7~' beginning-of-line
-bindkey '5C'	forward-word
-bindkey '5D'	backward-word
-# screen/tmux
-bindkey '\E[1~' beginning-of-line
-bindkey '\E[4~' end-of-line
-bindkey '\EOD'	backward-word
-bindkey '\EOC'	forward-word
+key[Home]=${terminfo[khome]}
+key[End]=${terminfo[kend]}
+key[Insert]=${terminfo[kich1]}
+key[Delete]=${terminfo[kdch1]}
+key[Up]=${terminfo[kcuu1]}
+key[Down]=${terminfo[kcud1]}
+key[Left]=${terminfo[kcub1]}
+key[Right]=${terminfo[kcuf1]}
+key[PageUp]=${terminfo[kpp]}
+key[PageDown]=${terminfo[knp]}
 
-## Style
-##############
+[[ -n "${key[Home]}"    ]]  && bindkey  "${key[Home]}"    beginning-of-line
+[[ -n "${key[End]}"     ]]  && bindkey  "${key[End]}"     end-of-line
+[[ -n "${key[Insert]}"  ]]  && bindkey  "${key[Insert]}"  overwrite-mode
+[[ -n "${key[Delete]}"  ]]  && bindkey  "${key[Delete]}"  delete-char
+[[ -n "${key[Up]}"      ]]  && bindkey  "${key[Up]}"      up-line-or-history
+[[ -n "${key[Down]}"    ]]  && bindkey  "${key[Down]}"    down-line-or-history
+[[ -n "${key[Left]}"    ]]  && bindkey  "${key[Left]}"    backward-char
+[[ -n "${key[Right]}"   ]]  && bindkey  "${key[Right]}"   forward-char
+
+## {{{1 Style 
 
 zle -N history-beginning-search-backward-end
 zle -N history-beginning-search-forward-end history-search-end
@@ -177,55 +191,79 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
 
-## Alias
-##############
+## {{{1 Alias
 
 alias -g ...="../.."
 alias -g ....="../../.."
-#alias alert="notify-send -i $(history|tail -n1)"
+alias cp="cp -r"
 alias DIE="sudo shutdown -hP now 'Ich Will Leben!'"
-alias la="ls -ACF"
-alias ll="ls -l -h --color=auto -F"
-alias ls="ls --color=auto -F"
+alias df="df -h"
+alias la="ls -ACF --group-directories-first"
+alias ll="ls -l -h --color=auto -F --group-directories-first"
+alias ls="ls --color=auto -F --group-directories-first"
+alias lsd="ls -d */"
 alias grep="grep --color=auto"
+alias inet="ip addr; ping google.de"
 alias -g ND='$(ls --color=none -d *(/om[1]))' # newest directory
 alias -g NF='$(ls --color=none *(.om[1]))' #newest file
 alias own="sudo chown `whoami`:users"
-alias podracer="cd /mnt/sda5/PodRacer; WINEDEBUG=-all wine podracer_*.exe; cd -"
 alias pwd=/bin/pwd	# inbuild pwd does not show realpath (symlink problem)
 alias pud='pwd | xsel -s'
 alias pod='cd "$( xsel -so )"'
 alias readbios="sudo dd if=/dev/mem bs=1k skip=768 count=512 2>/dev/null | strings -n 8"
 alias search="find | grep"
-#alias showip="wget -q -O - www.joerky.de/dyn/ip.php | cat"
 alias showip="curl icanhazip.com"
-alias ut99="cd /mnt/sda5/Unr*/Sy*; WINEDEBUG=-all wine UnrealT*.exe; cd -"
-alias xorg="sudo vim /etc/X11/xorg.conf"
+alias srm="mv -t ~/.local/share/Trash/files --backup=t --verbose"
+alias weather="curl -s wttr.in/bonn+germany | head -n 7" # 2> /dev/null"
 
 ## Command File Type Detection
-compctl -/ -g '*.(ogg|ogv|avi|mpg|mpeg|wmv|mp4|mov|flv|divx|mkv|vob)' smplayer
+compctl -/ -g '*.(ogg|ogv|avi|mpg|mpeg|wmv|mp4|mov|flv|divx|mkv|vob)' mplayer
 compctl -/ -g '*.(png|jpg|gif|bmp|tiff|jpeg|tga|JPG)' feh
 
 # auto open movies
 alias -s {mpg,mpeg,avi,ogm,wmv,m4v,mp4,mov,mkv,vob,ogv,ogg}="mplayer -idx"
 
 # auto open audio
-alias -s {mp3,ogg,wav,flac}="cplay"
+alias -s {mp3,ogg,wav,flac}="mplayer"
 
 
-## Functions
-##############
+## {{{1 Functions
+
+function rndpron()
+{
+	#mplayer ~/Videos/.p/"$(ls ~/Videos/.p/ | shuf | head -n1)"
+	cd ~/Videos/.pron/
+	#$(*) | shuf  | xargs mplayer
+	rm pl.txt
+	files=(*); for x in {1..50}; do i=$((RANDOM % ${#files[@]} + 1)); echo "${files[i]}" >> pl.txt; done
+	uniq pl.txt > p.txt
+	mv p.txt pl.txt 
+	mplayer -playlist pl.txt
+
+	cd -
+
+}
 
 function update()
 {
-#    packer --noconfirm -Syu
-	sudo clyde -Syu --aur --noconfirm
+	if [ -f /usr/bin/apt-get ];	then
+		sudo apt-get update
+		sudo apt-get dist-upgrade -y
+	else
+	    packer --noconfirm -Syu
+	fi
+}
+
+function cleanpackertmp()
+{
+	rm -rv /tmp/packerbuild-1000
+#	rm -rv /tmp/packertmp-1000
 }
 
 function cleanthumbnails()
 {
 	du -sh ~/.thumbnails
-	find ~/.thumbnails -type f -atime +28 -exec rm '{}' \;
+	find ~/.thumbnails -type f -atime +30 -exec rm '{}' \;
 	du -sh ~/.thumbnails
 }
 
@@ -246,13 +284,14 @@ function showtopcmds()
     fi
     print -l ${(o)history%% *} | uniq -c | sort -nr | head -n "$1"
     echo "* Roots Top Cmds:"
+
 	grep sudo $HISTFILE | awk '{print $2}'| sort | uniq -c | sort -nr | head -n "$1"
     echo "* Total Cmds: `wc -l $HISTFILE`"
 }
 
 function llocate()
 {
-    locate $@ | grep -v /mnt/
+    locate $@ | grep -v /media
 }
 
 function lowercase-extensions()
@@ -274,11 +313,6 @@ function bcalc() {
     fi
 }
 
-function title()
-{
-	print -nR $'\033]0;'$*$'\a'
-}
-
 function locategrep 
 { 
   if [ "${#}" != 2 ] ; then 
@@ -290,22 +324,15 @@ function locategrep
   fi; 
 }
 
-function lli()
+function llgrep()
 {
     ls -l --color=auto | grep -i ${1:-""} 
 }
 
-function c() {
-    case $1 in
-        (-Ss | -Si | -Q* | -T | -G | *)
-            /usr/bin/clyde "$@" ;;
-        (-S* | -R* | -U )
-            /usr/bin/sudo /usr/bin/clyde "$@" || /bin/su -c /usr/bin/clyde "$@" || return $? ;;
-    esac
+function mvcd()
+{
+	mv -iv "${@}" && cd "${@: -1}"
 }
-
-
-#compdef _pacman clyde=pacman
 
 #[ -f .todo ] && cat .todo
 
