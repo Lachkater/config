@@ -56,6 +56,8 @@ bindkey -M emacs '^[[1;5D' backward-word
 bindkey '^R'  history-incremental-search-backward
 bindkey '^[[5~' history-search-backward		#PgUp
 bindkey '^[[6~' history-search-forward		#PgDwn
+bindkey '^[[H' beginning-of-line
+bindkey '^[[F' end-of-line
 
 typeset -A key
 
