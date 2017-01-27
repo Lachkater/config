@@ -56,9 +56,8 @@ bindkey -M emacs '^[[1;5D' backward-word
 bindkey '^R'  history-incremental-search-backward
 bindkey '^[[5~' history-search-backward		#PgUp
 bindkey '^[[6~' history-search-forward		#PgDwn
-bindkey '^[[H' beginning-of-line
-bindkey '^[[F' end-of-line
-
+bindkey '^[[H' beginning-of-line            #Home
+bindkey '^[[F' end-of-line            #Home
 typeset -A key
 
 key[Home]=${terminfo[khome]}
@@ -264,9 +263,11 @@ function cleanpackertmp()
 
 function cleanthumbnails()
 {
-	du -sh ~/.thumbnails
-	find ~/.thumbnails -type f -atime +30 -exec rm '{}' \;
-	du -sh ~/.thumbnails
+	echo "Thumbnail cache size before cleaning..."
+	du -h ~/.cache/thumbnails
+	find ~/.cache/thumbnails -type f -atime +90 -exec rm '{}' \;
+	echo "Thumbnail cache size after cleaning..."
+	du -h ~/.cache/thumbnails
 }
 
 function readdisk()
